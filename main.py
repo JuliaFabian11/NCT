@@ -216,20 +216,25 @@ selected = option_menu(
 # =============================================================================
 if selected == "Inicio":
 
-    st.title("NCT Data Hub")
+    st.title("NCT: ¿Expansión Infinita o Desigualdad Masiva?")
     st.caption("Análisis de exposición de contenido y gamificación del sistema de integrantes de NCT")
 
     # aquí agregar imagen grupal de NCT
     col_img, col_texto = st.columns([1, 2])
     with col_img:
-        st.info("Espacio reservado para la imagen grupal de NCT")
+        st.image("NCTALLMEMBERS.webp", caption="Miembros de NCT", use_container_width=True)
     with col_texto:
         texto_intro = (
-            "Neo Culture Technology (NCT), de SM Entertainment, funciona bajo un modelo de "
-            "expansión constante: no tiene una alineación fija, sino que agrupa a más de veinte "
-            "integrantes repartidos en subunidades como NCT 127, NCT DREAM, WayV y NCT WISH, "
-            "además de la unidad rotativa NCT U. Ese tamaño hace difícil saber, sin datos, "
-            "cuánto aparece realmente cada integrante en canciones y videos musicales."
+            “El fenómeno global del K-Pop ha transformado la industria musical mediante estructuras”
+            “de negocio altamente innovadoras. Dentro de este panorama, el megagrupo Neo Culture”
+            “Technology (NCT), gestionado por la empresa surcoreana SM Entertainment, destaca por”
+            “implementar un modelo operativo disruptivo denominado “sistema de expansión”
+            “constante”. Bajo este concepto, el grupo no posee una alineación fija, sino que opera”
+            “como un ecosistema masivo integrado por más de 20 miembros activos distribuidos en” 
+            “diversas subunidades especializadas como NCT 127, NCT DREAM, WayV y la reciente NCT” 
+            “Wish. Asimismo, coexiste la unidad rotativa NCT U, donde los integrantes colaboran en” 
+            “combinaciones variables por proyecto antes de regresar a sus agrupaciones base.”
+
         )
         st.write(texto_intro)
 
