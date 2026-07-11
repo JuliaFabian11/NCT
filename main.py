@@ -146,23 +146,22 @@ letras_df = cargar_letras()
 # CÁLCULOS DERIVADOS QUE SE REUTILIZAN EN VARIAS PÁGINAS
 # =============================================================================
 @st.cache_data
-def calcular_exposicion_por_miembro(videos_df):
+def calcular_exposicion_por_miembro(_videos_df):
     """Calcula el tiempo total de aparición (en segundos) de cada integrante,
     sumando la duración completa de cada video en el que aparece su nombre
     dentro de la columna MIEMBROS. Esto sigue la misma lógica descrita en el
     informe: se asigna la duración total del video a cada integrante listado."""
     exposicion = {}
-    for _, fila in videos_df.iterrows():
+    for _, fila in _videos_df.iterrows():
         for miembro in fila["LISTA_MIEMBROS"]:
             exposicion[miembro] = exposicion.get(miembro, 0) + fila["DURACION_SEGUNDOS"]
     return exposicion
 
 
 @st.cache_data
-def calcular_videos_por_miembro(videos_df):
-    """Cuenta en cuántos videos aparece cada integrante."""
+def calcular_videos_por_miembro(_videos_df):
     conteo = {}
-    for _, fila in videos_df.iterrows():
+    for _, fila in _videos_df.iterrows():
         for miembro in fila["LISTA_MIEMBROS"]:
             conteo[miembro] = conteo.get(miembro, 0) + 1
     return conteo
@@ -181,12 +180,10 @@ def calcular_lineas_por_miembro(letras_df):
 
 
 @st.cache_data
-def calcular_participacion_por_subunidad(videos_df, miembros_df):
-    """Suma, por subunidad principal de cada integrante, el total de
-    apariciones que acumulan sus miembros en todos los videos."""
-    mapa_subunidad = dict(zip(miembros_df["MIEMBRO"], miembros_df["SUBUNIDAD_PRINCIPAL"]))
+def calcular_participacion_por_subunidad(_videos_df, _miembros_df):
+    mapa_subunidad = dict(zip(_miembros_df["MIEMBRO"], _miembros_df["SUBUNIDAD_PRINCIPAL"]))
     conteo = {}
-    for _, fila in videos_df.iterrows():
+    for _, fila in _videos_df.iterrows():
         for miembro in fila["LISTA_MIEMBROS"]:
             sub = mapa_subunidad.get(miembro, "Otra")
             conteo[sub] = conteo.get(sub, 0) + 1
