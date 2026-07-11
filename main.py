@@ -221,7 +221,7 @@ if selected == "Inicio":
 
     col_img, col_texto = st.columns([1, 2])
     with col_img:
-        st.info("Espacio reservado para la imagen grupal de NCT")
+        st.info(""NCTALLMEMBERS.webp", caption="Miembros de NCT", use_container_width=True")
     with col_texto:
         texto_intro = (
             "Neo Culture Technology (NCT), de SM Entertainment, funciona bajo un modelo de "
