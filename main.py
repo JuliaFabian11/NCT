@@ -216,10 +216,9 @@ selected = option_menu(
 # =============================================================================
 if selected == "Inicio":
 
-    st.title("NCT Data Hub")
+    st.title("NCT: ¿Expansión Infinita o Desigualdad Masiva?")
     st.caption("Análisis de exposición de contenido y gamificación del sistema de integrantes de NCT")
 
-    # aquí agregar imagen grupal de NCT
     col_img, col_texto = st.columns([1, 2])
     with col_img:
         st.info("Espacio reservado para la imagen grupal de NCT")
