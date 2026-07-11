@@ -11,6 +11,7 @@ from streamlit_option_menu import option_menu
 # pandas para leer y manipular los archivos csv
 import pandas as pd
 # numpy para operaciones numéricas auxiliares (promedios, redondeos, arrays)
+import os
 import numpy as np
 # plotly.express y plotly.graph_objects para los gráficos interactivos
 import plotly.express as px
@@ -276,8 +277,12 @@ elif selected == "Conoce NCT":
 
     col_foto, col_datos = st.columns([1, 2])
     with col_foto:
-        # aquí agregar imagen de Mark (o del integrante seleccionado en cada caso)
-        st.info(f"Espacio reservado para la foto de {nombre_seleccionado}")
+        # cada foto se llama igual que el integrante, ej. Mark.webp, Chenle.webp
+        ruta_foto = f"{nombre_seleccionado}.webp"
+        if os.path.exists(ruta_foto):
+            st.image(ruta_foto, caption=nombre_seleccionado, use_container_width=True)
+        else:
+            st.info(f"Foto no disponible para {nombre_seleccionado}")
     with col_datos:
         st.subheader(nombre_seleccionado)
         st.write(f"**Fecha de nacimiento:** {fila['FECHA_NACIMIENTO']}")
