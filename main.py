@@ -224,11 +224,19 @@ if selected == "Inicio":
         st.image("NCTALLMEMBERS.webp", caption="Miembros de NCT", use_container_width=True)
     with col_texto:
         texto_intro = (
-            "El fenómeno global del K-Pop ha transformado la industria musical mediante estructuras de negocio altamente innovadoras. Dentro de este panorama, el megagrupo Neo Culture Technology (NCT), gestionado por la empresa surcoreana SM Entertainment, destaca por implementar un modelo operativo disruptivo denominado “sistema de expansión constante”. Bajo este concepto, el grupo no posee una alineación fija, sino que opera como un ecosistema masivo integrado por más de 20 miembros activos distribuidos en diversas subunidades especializadas como NCT 127, NCT DREAM, WayV y la reciente NCT Wish. Asimismo, coexiste la unidad rotativa NCT U, donde los integrantes colaboran en combinaciones variables por proyecto antes de regresar a sus agrupaciones base.
- "
-        )
+        "El fenómeno global del K-Pop ha transformado la industria musical mediante "
+        "estructuras de negocio altamente innovadoras. Dentro de este panorama, el "
+        "megagrupo Neo Culture Technology (NCT), gestionado por la empresa surcoreana "
+        "SM Entertainment, destaca por implementar un modelo operativo disruptivo "
+        'denominado "sistema de expansión constante". Bajo este concepto, el grupo '
+        "no posee una alineación fija, sino que opera como un ecosistema masivo "
+        "integrado por más de 20 miembros activos distribuidos en diversas "
+        "subunidades especializadas como NCT 127, NCT DREAM, WayV y la reciente "
+        "NCT WISH. Asimismo, coexiste la unidad rotativa NCT U, donde los integrantes "
+        "colaboran en combinaciones variables por proyecto antes de regresar a sus "
+        "agrupaciones base."
+    )
         st.write(texto_intro)
-
     st.divider()
 
     col_obj, col_expl = st.columns(2)
