@@ -543,7 +543,7 @@ elif selected == "Juego":
         for pista in st.session_state.pistas_reveladas:
             st.write(f"🔎 {pista}")
 
-    respuesta = st.text_input("Nombre del integrante", key="respuesta_input", disabled=st.session_state.terminado)
+    respuesta = st.text_input("Nombra un integrante", key="respuesta_input", disabled=st.session_state.terminado)
 
     col_check, col_next = st.columns(2)
     intentar = col_check.button("Comprobar respuesta", disabled=st.session_state.terminado)
