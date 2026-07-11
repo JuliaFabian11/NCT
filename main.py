@@ -515,13 +515,9 @@ elif selected == "Mapa":
 # PÁGINA 5: JUEGO - ADIVINA EL INTEGRANTE
 # =============================================================================
 elif selected == "Juego":
-
     st.title("Adivina el integrante")
     st.caption("Escribe el nombre artístico del integrante secreto. Tienes 3 intentos por ronda.")
-
     lista_nombres = list(miembros_df["MIEMBRO"].unique())
-
-    # Orden fijo en el que se van revelando las pistas tras cada error
     ORDEN_PISTAS = ["SUBUNIDAD", "PAIS", "SIGNO"]
 
     def elegir_nuevo_secreto():
@@ -531,7 +527,6 @@ elif selected == "Juego":
         st.session_state.mensaje = ""
         st.session_state.terminado = False
 
-    # Inicializamos el estado del juego la primera vez que se visita la página
     if "secreto" not in st.session_state:
         st.session_state.puntaje = 0
         elegir_nuevo_secreto()
@@ -542,7 +537,6 @@ elif selected == "Juego":
     col_score.metric("Puntaje", st.session_state.puntaje)
     col_intentos.metric("Intentos usados", f"{st.session_state.intentos} / 3")
 
-    # Mostramos las pistas que ya se han revelado
     if st.session_state.pistas_reveladas:
         st.subheader("Pistas")
         for pista in st.session_state.pistas_reveladas:
@@ -555,25 +549,23 @@ elif selected == "Juego":
     siguiente = col_next.button("Siguiente integrante")
 
     if intentar:
-        # Normalizamos la respuesta del usuario para evitar fallos por
-        # mayúsculas o espacios extra
         entrada = respuesta.lower().strip()
         correcto = st.session_state.secreto.lower()
 
-        if entrada == correcto:
+        if entrada == "":
+            st.warning("Escribe un nombre antes de comprobar.")
+        elif entrada == correcto:
             st.success(f"¡Correcto! Era {st.session_state.secreto}. +1 punto")
             st.session_state.puntaje += 1
             elegir_nuevo_secreto()
-        elif entrada not in [n.lower() for n in lista_nombres] and entrada != "":
+            st.rerun()
+        elif entrada not in [n.lower() for n in lista_nombres]:
             st.error("Ese nombre no pertenece a ningún integrante de NCT registrado. Intenta de nuevo.")
         else:
             st.session_state.intentos += 1
             if st.session_state.intentos >= 3:
-                st.error(f"Se acabaron los intentos. El integrante secreto era {st.session_state.secreto}.")
                 st.session_state.terminado = True
             else:
-                # Elegimos la siguiente pista disponible según el número de
-                # intentos fallidos que lleva el usuario
                 tipo_pista = ORDEN_PISTAS[st.session_state.intentos - 1]
                 if tipo_pista == "SUBUNIDAD":
                     pista_texto = f"Pertenece a la subunidad: {fila_secreta['SUBUNIDAD_PRINCIPAL']}"
@@ -582,10 +574,12 @@ elif selected == "Juego":
                 else:
                     pista_texto = f"Su signo zodiacal es: {fila_secreta['SIGNO_ZODIACAL']}"
                 st.session_state.pistas_reveladas.append(pista_texto)
-                st.warning("Respuesta incorrecta. Nueva pista revelada.")
+            st.rerun()
 
     if siguiente:
         elegir_nuevo_secreto()
+        st.rerun()
 
     if st.session_state.terminado:
+        st.error(f"Se acabaron los intentos. El integrante secreto era {st.session_state.secreto}.")
         st.info("Presiona 'Siguiente integrante' para comenzar una nueva ronda.")
