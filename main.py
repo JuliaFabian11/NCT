@@ -21,10 +21,9 @@ from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 # random para el juego "Adivina el integrante"
 import random
-import os
 # datetime para el manejo de fechas y la conversión de duraciones de video
 from datetime import datetime, timedelta
-
+import os
 # =============================================================================
 # CONFIGURACIÓN GENERAL DE LA PÁGINA
 # =============================================================================
@@ -275,9 +274,13 @@ elif selected == "Conoce NCT":
     fila = miembros_df[miembros_df["MIEMBRO"] == nombre_seleccionado].iloc[0]
 
     col_foto, col_datos = st.columns([1, 2])
-    with col_foto:
-        # aquí agregar imagen de Mark (o del integrante seleccionado en cada caso)
-        st.info(f"Espacio reservado para la foto de {nombre_seleccionado}")
+with col_foto:
+        # cada foto se llama igual que el integrante, ej. Mark.webp, Chenle.webp
+        ruta_foto = f"{nombre_seleccionado}.webp"
+        if os.path.exists(ruta_foto):
+            st.image(ruta_foto, caption=nombre_seleccionado, use_container_width=True)
+        else:
+            st.info(f"Foto no disponible para {nombre_seleccionado}")
     with col_datos:
         st.subheader(nombre_seleccionado)
         st.write(f"**Fecha de nacimiento:** {fila['FECHA_NACIMIENTO']}")
