@@ -271,23 +271,13 @@ elif selected == "Conoce NCT":
 
     st.title("Conoce a los integrantes")
 
-    nombre_seleccionado = st.selectbox(
-        "Elige un integrante",
-        sorted(miembros_df["MIEMBRO"].unique())
-    )
-
+    nombre_seleccionado = st.selectbox("Elige un integrante", sorted(miembros_df["MIEMBRO"].unique()))
     fila = miembros_df[miembros_df["MIEMBRO"] == nombre_seleccionado].iloc[0]
 
     col_foto, col_datos = st.columns([1, 2])
-
     with col_foto:
-        ruta = f"{nombre_seleccionado}.webp"
-
-        if os.path.exists(ruta):
-            st.image(ruta, use_container_width=True)
-        else:
-            st.warning(f"No se encontró la foto de {nombre_seleccionado}.")
-
+        # aquí agregar imagen de Mark (o del integrante seleccionado en cada caso)
+        st.info(f"Espacio reservado para la foto de {nombre_seleccionado}")
     with col_datos:
         st.subheader(nombre_seleccionado)
         st.write(f"**Fecha de nacimiento:** {fila['FECHA_NACIMIENTO']}")
@@ -296,6 +286,7 @@ elif selected == "Conoce NCT":
         st.write(f"**Subunidad:** {fila['SUBUNIDADES']}")
         st.write(f"**Posición:** {fila['POSICION']}")
         st.write(f"**Signo zodiacal:** {fila['SIGNO_ZODIACAL']}")
+
 
 # =============================================================================
 # PÁGINA 3: ESTADÍSTICAS
