@@ -23,7 +23,7 @@ from streamlit_folium import st_folium
 import random
 # datetime para el manejo de fechas y la conversión de duraciones de video
 from datetime import datetime, timedelta
-import os
+
 # =============================================================================
 # CONFIGURACIÓN GENERAL DE LA PÁGINA
 # =============================================================================
@@ -86,7 +86,7 @@ def cargar_miembros():
     # La columna FECHA_NACIMIENTO viene en formato DD-MM-AAAA, la convertimos
     # a un objeto datetime real para poder extraer el año fácilmente
     df["FECHA_NACIMIENTO_DT"] = pd.to_datetime(df["FECHA_NACIMIENTO"], format="%d-%m-%Y")
-    df["AÑO_NACIMIENTO"] = df["FECHA_NACIMIENTO_DT"].dt.year
+    df["ANIO_NACIMIENTO"] = df["FECHA_NACIMIENTO_DT"].dt.year
 
     # La columna SUBUNIDADES puede tener varias subunidades separadas por
     # coma (ej. "NCT 127, NCT U"). Definimos la subunidad principal como la
@@ -146,22 +146,23 @@ letras_df = cargar_letras()
 # CÁLCULOS DERIVADOS QUE SE REUTILIZAN EN VARIAS PÁGINAS
 # =============================================================================
 @st.cache_data
-def calcular_exposicion_por_miembro(_videos_df):
+def calcular_exposicion_por_miembro(videos_df):
     """Calcula el tiempo total de aparición (en segundos) de cada integrante,
     sumando la duración completa de cada video en el que aparece su nombre
     dentro de la columna MIEMBROS. Esto sigue la misma lógica descrita en el
     informe: se asigna la duración total del video a cada integrante listado."""
     exposicion = {}
-    for _, fila in _videos_df.iterrows():
+    for _, fila in videos_df.iterrows():
         for miembro in fila["LISTA_MIEMBROS"]:
             exposicion[miembro] = exposicion.get(miembro, 0) + fila["DURACION_SEGUNDOS"]
     return exposicion
 
 
 @st.cache_data
-def calcular_videos_por_miembro(_videos_df):
+def calcular_videos_por_miembro(videos_df):
+    """Cuenta en cuántos videos aparece cada integrante."""
     conteo = {}
-    for _, fila in _videos_df.iterrows():
+    for _, fila in videos_df.iterrows():
         for miembro in fila["LISTA_MIEMBROS"]:
             conteo[miembro] = conteo.get(miembro, 0) + 1
     return conteo
@@ -180,10 +181,12 @@ def calcular_lineas_por_miembro(letras_df):
 
 
 @st.cache_data
-def calcular_participacion_por_subunidad(_videos_df, _miembros_df):
-    mapa_subunidad = dict(zip(_miembros_df["MIEMBRO"], _miembros_df["SUBUNIDAD_PRINCIPAL"]))
+def calcular_participacion_por_subunidad(videos_df, miembros_df):
+    """Suma, por subunidad principal de cada integrante, el total de
+    apariciones que acumulan sus miembros en todos los videos."""
+    mapa_subunidad = dict(zip(miembros_df["MIEMBRO"], miembros_df["SUBUNIDAD_PRINCIPAL"]))
     conteo = {}
-    for _, fila in _videos_df.iterrows():
+    for _, fila in videos_df.iterrows():
         for miembro in fila["LISTA_MIEMBROS"]:
             sub = mapa_subunidad.get(miembro, "Otra")
             conteo[sub] = conteo.get(sub, 0) + 1
@@ -213,27 +216,23 @@ selected = option_menu(
 # =============================================================================
 if selected == "Inicio":
 
-    st.title("NCT: ¿Expansión Infinita o Desigualdad Masiva?")
+    st.title("NCT Data Hub")
     st.caption("Análisis de exposición de contenido y gamificación del sistema de integrantes de NCT")
 
+    # aquí agregar imagen grupal de NCT
     col_img, col_texto = st.columns([1, 2])
     with col_img:
-        st.image("NCTALLMEMBERS.webp", caption="Miembros de NCT", use_container_width=True)
+        st.info("Espacio reservado para la imagen grupal de NCT")
     with col_texto:
         texto_intro = (
-        "El fenómeno global del K-Pop ha transformado la industria musical mediante "
-        "estructuras de negocio altamente innovadoras. Dentro de este panorama, el "
-        "megagrupo Neo Culture Technology (NCT), gestionado por la empresa surcoreana "
-        "SM Entertainment, destaca por implementar un modelo operativo disruptivo "
-        'denominado "sistema de expansión constante". Bajo este concepto, el grupo '
-        "no posee una alineación fija, sino que opera como un ecosistema masivo "
-        "integrado por más de 20 miembros activos distribuidos en diversas "
-        "subunidades especializadas como NCT 127, NCT DREAM, WayV y la reciente "
-        "NCT WISH. Asimismo, coexiste la unidad rotativa NCT U, donde los integrantes "
-        "colaboran en combinaciones variables por proyecto antes de regresar a sus "
-        "agrupaciones base."
-    )
+            "Neo Culture Technology (NCT), de SM Entertainment, funciona bajo un modelo de "
+            "expansión constante: no tiene una alineación fija, sino que agrupa a más de veinte "
+            "integrantes repartidos en subunidades como NCT 127, NCT DREAM, WayV y NCT WISH, "
+            "además de la unidad rotativa NCT U. Ese tamaño hace difícil saber, sin datos, "
+            "cuánto aparece realmente cada integrante en canciones y videos musicales."
+        )
         st.write(texto_intro)
+
     st.divider()
 
     col_obj, col_expl = st.columns(2)
@@ -271,13 +270,9 @@ elif selected == "Conoce NCT":
     fila = miembros_df[miembros_df["MIEMBRO"] == nombre_seleccionado].iloc[0]
 
     col_foto, col_datos = st.columns([1, 2])
-with col_foto:
-        # cada foto se llama igual que el integrante, ej. Mark.webp, Chenle.webp
-        ruta_foto = f"{nombre_seleccionado}.webp"
-        if os.path.exists(ruta_foto):
-            st.image(ruta_foto, caption=nombre_seleccionado, use_container_width=True)
-        else:
-            st.info(f"Foto no disponible para {nombre_seleccionado}")
+    with col_foto:
+        # aquí agregar imagen de Mark (o del integrante seleccionado en cada caso)
+        st.info(f"Espacio reservado para la foto de {nombre_seleccionado}")
     with col_datos:
         st.subheader(nombre_seleccionado)
         st.write(f"**Fecha de nacimiento:** {fila['FECHA_NACIMIENTO']}")
@@ -286,7 +281,6 @@ with col_foto:
         st.write(f"**Subunidad:** {fila['SUBUNIDADES']}")
         st.write(f"**Posición:** {fila['POSICION']}")
         st.write(f"**Signo zodiacal:** {fila['SIGNO_ZODIACAL']}")
-
 
 # =============================================================================
 # PÁGINA 3: ESTADÍSTICAS
@@ -302,19 +296,19 @@ elif selected == "Estadísticas":
         f1, f2, f3, f4 = st.columns(4)
         subunidades_disp = sorted(miembros_df["SUBUNIDAD_PRINCIPAL"].unique())
         paises_disp = sorted(miembros_df["PAIS"].unique())
-        años_disp = sorted(miembros_df["AÑO_NACIMIENTO"].unique())
+        anios_disp = sorted(miembros_df["ANIO_NACIMIENTO"].unique())
         integrantes_disp = sorted(miembros_df["MIEMBRO"].unique())
 
         filtro_subunidad = f1.multiselect("Subunidad", subunidades_disp, default=subunidades_disp)
         filtro_pais = f2.multiselect("País", paises_disp, default=paises_disp)
-        filtro_año = f3.multiselect("Año de nacimiento", años_disp, default=años_disp)
+        filtro_anio = f3.multiselect("Año de nacimiento", anios_disp, default=anios_disp)
         filtro_integrante = f4.multiselect("Integrante", integrantes_disp, default=integrantes_disp)
 
     # Aplicamos los filtros sobre la tabla de miembros
     miembros_filtrados = miembros_df[
         miembros_df["SUBUNIDAD_PRINCIPAL"].isin(filtro_subunidad) &
         miembros_df["PAIS"].isin(filtro_pais) &
-        miembros_df["AÑO_NACIMIENTO"].isin(filtro_año) &
+        miembros_df["ANIO_NACIMIENTO"].isin(filtro_anio) &
         miembros_df["MIEMBRO"].isin(filtro_integrante)
     ]
     nombres_filtrados = set(miembros_filtrados["MIEMBRO"])
