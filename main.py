@@ -86,7 +86,7 @@ def cargar_miembros():
     # La columna FECHA_NACIMIENTO viene en formato DD-MM-AAAA, la convertimos
     # a un objeto datetime real para poder extraer el año fácilmente
     df["FECHA_NACIMIENTO_DT"] = pd.to_datetime(df["FECHA_NACIMIENTO"], format="%d-%m-%Y")
-    df["ANIO_NACIMIENTO"] = df["FECHA_NACIMIENTO_DT"].dt.year
+    df["AÑO_NACIMIENTO"] = df["FECHA_NACIMIENTO_DT"].dt.year
 
     # La columna SUBUNIDADES puede tener varias subunidades separadas por
     # coma (ej. "NCT 127, NCT U"). Definimos la subunidad principal como la
@@ -302,19 +302,19 @@ elif selected == "Estadísticas":
         f1, f2, f3, f4 = st.columns(4)
         subunidades_disp = sorted(miembros_df["SUBUNIDAD_PRINCIPAL"].unique())
         paises_disp = sorted(miembros_df["PAIS"].unique())
-        anios_disp = sorted(miembros_df["ANIO_NACIMIENTO"].unique())
+        años_disp = sorted(miembros_df["AÑO_NACIMIENTO"].unique())
         integrantes_disp = sorted(miembros_df["MIEMBRO"].unique())
 
         filtro_subunidad = f1.multiselect("Subunidad", subunidades_disp, default=subunidades_disp)
         filtro_pais = f2.multiselect("País", paises_disp, default=paises_disp)
-        filtro_anio = f3.multiselect("Año de nacimiento", anios_disp, default=anios_disp)
+        filtro_año = f3.multiselect("Año de nacimiento", años_disp, default=años_disp)
         filtro_integrante = f4.multiselect("Integrante", integrantes_disp, default=integrantes_disp)
 
     # Aplicamos los filtros sobre la tabla de miembros
     miembros_filtrados = miembros_df[
         miembros_df["SUBUNIDAD_PRINCIPAL"].isin(filtro_subunidad) &
         miembros_df["PAIS"].isin(filtro_pais) &
-        miembros_df["ANIO_NACIMIENTO"].isin(filtro_anio) &
+        miembros_df["AÑO_NACIMIENTO"].isin(filtro_año) &
         miembros_df["MIEMBRO"].isin(filtro_integrante)
     ]
     nombres_filtrados = set(miembros_filtrados["MIEMBRO"])
