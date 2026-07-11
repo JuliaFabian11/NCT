@@ -225,7 +225,7 @@ if selected == "Inicio":
         st.image("NCTALLMEMBERS.webp", caption="Miembros de NCT", use_container_width=True)
     with col_texto:
         texto_intro = (
-            “El fenómeno global del K-Pop ha transformado la industria musical mediante estructuras”
+            "El fenómeno global del K-Pop ha transformado la industria musical mediante estructuras”
             “de negocio altamente innovadoras. Dentro de este panorama, el megagrupo Neo Culture”
             “Technology (NCT), gestionado por la empresa surcoreana SM Entertainment, destaca por”
             “implementar un modelo operativo disruptivo denominado “sistema de expansión”
