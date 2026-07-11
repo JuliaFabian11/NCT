@@ -1,0 +1,7 @@
+[theme]
+primaryColor="#B39DDB"
+backgroundColor="#F3E5F5"
+secondaryBackgroundColor="#E8E3D9"
+textColor="#2E2E2E"
+font = "Charm"
+codeFont = "JetBrains Mono:https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap"
