@@ -529,7 +529,6 @@ elif selected == "Juego":
 
     if "secreto" not in st.session_state:
         st.session_state.puntaje = 0
-        st.session_state.ultimo_acierto = None
         elegir_nuevo_secreto()
 
     fila_secreta = miembros_df[miembros_df["MIEMBRO"] == st.session_state.secreto].iloc[0]
@@ -556,9 +555,7 @@ elif selected == "Juego":
         if entrada == "":
             st.warning("Escribe un nombre antes de comprobar.")
         elif entrada == correcto:
-            # Guardamos el nombre del integrante acertado antes de reiniciar
-            # la ronda, para poder mostrar su foto después del rerun
-            st.session_state.ultimo_acierto = st.session_state.secreto
+            st.success(f"¡Correcto! Era {st.session_state.secreto}. +1 punto")
             st.session_state.puntaje += 1
             elegir_nuevo_secreto()
             st.rerun()
@@ -580,20 +577,9 @@ elif selected == "Juego":
             st.rerun()
 
     if siguiente:
-        st.session_state.ultimo_acierto = None
         elegir_nuevo_secreto()
         st.rerun()
 
     if st.session_state.terminado:
         st.error(f"Se acabaron los intentos. El integrante secreto era {st.session_state.secreto}.")
         st.info("Presiona 'Siguiente integrante' para comenzar una nueva ronda.")
-
-    # Mostramos la foto del último integrante acertado correctamente
-    if st.session_state.ultimo_acierto:
-        st.divider()
-        st.success(f"¡Acertaste! Era {st.session_state.ultimo_acierto}")
-        ruta_foto = f"{st.session_state.ultimo_acierto}.webp"
-        if os.path.exists(ruta_foto):
-            st.image(ruta_foto, caption=st.session_state.ultimo_acierto, width=250)
-        else:
-            st.info(f"Foto no disponible para {st.session_state.ultimo_acierto}")
